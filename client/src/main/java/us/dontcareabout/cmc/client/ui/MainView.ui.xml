@@ -1,0 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+	xmlns:c="urn:import:com.sencha.gxt.widget.core.client" 
+	xmlns:cmc="urn:import:us.dontcareabout.cmc.client.ui" >
+
+	<ui:with field="ovConfig" type="com.sencha.gxt.widget.core.client.TabItemConfig">
+		<ui:attributes text="展品列表"/>
+	</ui:with>
+	<ui:with field="settingConfig" type="com.sencha.gxt.widget.core.client.TabItemConfig">
+		<ui:attributes text="系統設定"/>
+	</ui:with>
+	
+	<c:TabPanel ui:field="root">
+		<c:child config="{settingConfig}">
+			<cmc:SettingView ui:field="settingView" />
+		</c:child>
+	</c:TabPanel>
+</ui:UiBinder> 

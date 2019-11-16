@@ -1,0 +1,45 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+	xmlns:c="urn:import:com.sencha.gxt.widget.core.client.container" 
+	xmlns:core="urn:import:com.sencha.gxt.widget.core.client" 
+	xmlns:btn="urn:import:com.sencha.gxt.widget.core.client.button" 
+	xmlns:f="urn:import:com.sencha.gxt.widget.core.client.form">
+
+	<ui:with field="newMargins" type="com.sencha.gxt.core.client.util.Margins">
+		<ui:attributes top="3" right="20" bottom="10" left="20" />
+	</ui:with>
+	<ui:with field="newVLD" type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+		<ui:attributes width="80" height="45" margins="{newMargins}" />
+	</ui:with>
+	<ui:with field="formVLD" type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+		<ui:attributes width="1" height="1" />
+	</ui:with>
+	<ui:with field="fieldVLD" type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+		<ui:attributes width="1" height="32" />
+	</ui:with>
+
+	<c:VerticalLayoutContainer>
+		<btn:TextButton ui:field="newBtn" layoutData="{newVLD}" text="新增"/>
+		<core:FramedPanel ui:field="form" layoutData="{formVLD}" enabled="false">
+			<c:VerticalLayoutContainer>
+				<f:FieldLabel text="試算表網址" layoutData="{fieldVLD}">
+					<f:widget>
+						<f:TextField ui:field="id" />
+					</f:widget>
+				</f:FieldLabel>
+				<f:FieldLabel text="名稱" layoutData="{fieldVLD}">
+					<f:widget>
+						<f:TextField ui:field="name" />
+					</f:widget>
+				</f:FieldLabel>
+				<f:CheckBox ui:field="select" layoutData="{fieldVLD}" boxLabel="預設開啟" />
+			</c:VerticalLayoutContainer>
+			<core:button>
+				<btn:TextButton ui:field="submitBtn" text="確定" />
+			</core:button>
+			<core:button>
+				<btn:TextButton ui:field="deleteBtn" text="刪除" />
+			</core:button>
+		</core:FramedPanel>	
+	</c:VerticalLayoutContainer>
+</ui:UiBinder> 
