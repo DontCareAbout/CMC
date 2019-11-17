@@ -14,4 +14,11 @@ public class MuseumUtil {
 	public static String purgeUrl(Museum museum, String url) {
 		return museum.url + parseUrlId(museum, url);
 	}
+
+	/**
+	 * 這是因應系統運作所產生的定義，與現實世界的 artifact 識別無關。
+	 */
+	public static String artifactId(Museum museum, String url) {
+		return museum.name() + ":" + parseUrlId(museum, url);
+	}
 }
