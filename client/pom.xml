@@ -2,8 +2,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>us.dontcareabout.app</groupId>
-	<artifactId>CMC</artifactId>
+	<groupId>us.dontcareabout.app.cmc</groupId>
+	<artifactId>client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	
@@ -33,6 +33,12 @@
 			<artifactId>gwt-jackson</artifactId>
 			<version>0.15.4</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>us.dontcareabout.app.cmc</groupId>
+			<artifactId>common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	
@@ -66,12 +72,6 @@
 						<!-- 新增的 I18N Message 檔要在這裡作對應 -->
 					</i18nMessagesBundles>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.16.v20140903</version>
 			</plugin>
 		</plugins>
 	</build>	
