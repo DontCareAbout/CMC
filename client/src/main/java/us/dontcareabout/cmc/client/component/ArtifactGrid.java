@@ -53,7 +53,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 			@Override
 			public void onSelect(SelectEvent event) {
 				Artifact item = store.get(event.getContext().getIndex());
-				Window.open(MuseumUtil.purgeUrl(item.museum, item.getUrl()), null, "_blink");
+				Window.open(MuseumUtil.purgeUrl(item.museum, item.getUrl()), "_blank", null);
 			}
 		});
 		ColumnConfig<Artifact, String> urlId = new ColumnConfig<>(new GetValueProvider<Artifact, String>() {
@@ -89,7 +89,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		ListStore<Artifact> result = new ListStore<>(new ModelKeyProvider<Artifact>() {
 			@Override
 			public String getKey(Artifact item) {
-				return MuseumUtil.artifactId(item.museum, item.getUrl());
+				return MuseumUtil.artifactId(item.museum, MuseumUtil.parseUrlId(item.museum, item.getUrl()));
 			}
 		});
 		return result;
