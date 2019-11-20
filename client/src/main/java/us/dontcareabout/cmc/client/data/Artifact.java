@@ -3,6 +3,7 @@ package us.dontcareabout.cmc.client.data;
 import java.util.ArrayList;
 
 import us.dontcareabout.cmc.common.shared.ArtifactM;
+import us.dontcareabout.cmc.common.shared.ImageUrl;
 import us.dontcareabout.cmc.common.shared.Museum;
 
 /**
@@ -76,7 +77,7 @@ public class Artifact {
 		return fromM.getDimensions();
 	}
 
-	public ArrayList<String> getImage() {
+	public ArrayList<ImageUrl> getImage() {
 		return fromM.getImage();
 	}
 	////

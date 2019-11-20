@@ -15,7 +15,7 @@ public class ArtifactM {
 	private String material;
 	private String description;
 	private String dimensions;
-	private ArrayList<String> image = new ArrayList<String>();
+	private ArrayList<ImageUrl> image = new ArrayList<>();
 
 	public Museum getMuseum() {
 		return museum;
@@ -65,7 +65,7 @@ public class ArtifactM {
 	public void setDimensions(String dimensions) {
 		this.dimensions = dimensions;
 	}
-	public ArrayList<String> getImage() {
+	public ArrayList<ImageUrl> getImage() {
 		return image;
 	}
 }
