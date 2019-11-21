@@ -65,6 +65,10 @@ public class ArtifactM {
 	public void setDimensions(String dimensions) {
 		this.dimensions = dimensions;
 	}
+	@Deprecated	//為了配合 gwt-jackson 而加的，不符合 coding 習慣所以掛 deprecated
+	public void setImage(ArrayList<ImageUrl> image) {
+		this.image = image;
+	}
 	public ArrayList<ImageUrl> getImage() {
 		return image;
 	}
