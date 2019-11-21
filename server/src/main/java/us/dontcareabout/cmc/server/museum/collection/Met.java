@@ -43,6 +43,15 @@ public class Met implements Researcher {
 
 		image(doc.getElementsByClass("met-carousel__item"), result);
 
+		//只有單張圖，就沒有 met-carousel__item...... Orz
+		if (result.getImage().size() == 0) {
+			Elements elements = doc.getElementsByClass("gtm__download__image");
+			if (elements.size() != 0) {
+				String url = elements.get(0).attr("href");
+				result.getImage().add(new ImageUrl(url.replace("original", "web-additional"), url));
+			}
+		}
+
 		return result;
 	}
 
@@ -63,7 +72,7 @@ public class Met implements Researcher {
 		for (Element c : elements) {
 			artifact.getImage().add(new ImageUrl(
 				c.child(0).attr("src"),
-				c.child(0).attr("data-largeimage")
+				c.child(0).attr("data-superjumboimage")
 			));
 		}
 	}
