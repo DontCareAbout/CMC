@@ -1,6 +1,7 @@
 package us.dontcareabout.cmc.client.component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -12,6 +13,8 @@ import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
+import com.sencha.gxt.widget.core.client.event.ExpandItemEvent;
+import com.sencha.gxt.widget.core.client.event.ExpandItemEvent.ExpandItemHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
@@ -20,6 +23,9 @@ import com.sencha.gxt.widget.core.client.grid.GridView;
 import com.sencha.gxt.widget.core.client.grid.GroupingView;
 
 import us.dontcareabout.cmc.client.data.Artifact;
+import us.dontcareabout.cmc.client.data.DataCenter;
+import us.dontcareabout.cmc.common.shared.ArtifactM;
+import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.MuseumUtil;
 import us.dontcareabout.gxt.client.component.Grid2;
 import us.dontcareabout.gxt.client.model.GetValueProvider;
@@ -27,6 +33,8 @@ import us.dontcareabout.gxt.client.model.GetValueProvider;
 public class ArtifactGrid extends Grid2<Artifact> {
 	private static final int firstWidth = 100;
 	private static final Properties properties = GWT.create(Properties.class);
+
+	private HashMap<Museum, Boolean> expandMap = new HashMap<>();
 
 	private ColumnConfig<Artifact, String> museumCC = new ColumnConfig<>(
 		new GetValueProvider<Artifact, String>() {
@@ -44,6 +52,20 @@ public class ArtifactGrid extends Grid2<Artifact> {
 	public void refresh(List<Artifact> data) {
 		getStore().replaceAll(data);
 		checkEmpty();
+		expandMap.clear();
+		((GroupingView<?>)getView()).collapseAllGroups();
+	}
+
+	public void injectArtifactM(List<ArtifactM> data) {
+		for (ArtifactM am : data) {
+			Artifact a = getStore().findModelWithKey(MuseumUtil.artifactId(am.getMuseum(), am.getUrlId()));
+
+			if (a == null) { continue; }	//理論上不會發生 XD
+
+			a.setFromMuseum(am);
+		}
+
+		getView().refresh(true);
 	}
 
 	@Override
@@ -76,6 +98,11 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		list.add(score);
 		list.add(urlId);
 		list.add(new ColumnConfig<>(properties.note(), 100, "備註"));
+		list.add(new ColumnConfig<>(properties.name(), 100, "名稱"));
+		list.add(new ColumnConfig<>(properties.era(), 100, "年代"));
+		list.add(new ColumnConfig<>(properties.origin(), 100, "來源地"));
+		list.add(new ColumnConfig<>(properties.material(), 100, "材質"));
+		list.add(new ColumnConfig<>(properties.dimensions(), 100, "尺寸"));
 		return new ColumnModel<>(list);
 	}
 
@@ -96,6 +123,20 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		view.setShowGroupedColumn(false);
 		view.setForceFit(true);
 		view.groupBy(museumCC);
+		view.addExpandHandler(new ExpandItemHandler<List<Artifact>>() {
+			@Override
+			public void onExpand(ExpandItemEvent<List<Artifact>> event) {
+				Museum museum = event.getItem().get(0).getMuseum();
+				Boolean hasExpanded = expandMap.get(museum);
+
+				//已經要過得就不再要了
+				//理論上前面那個成立後面也一定成立，只是養成好習慣兩個都寫 XD
+				if (hasExpanded != null && hasExpanded) { return; }
+
+				expandMap.put(museum, true);
+				DataCenter.wantArtifactM(event.getItem());
+			}
+		});
 		return view;
 	}
 
