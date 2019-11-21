@@ -45,7 +45,10 @@ public class CollectionManager {
 
 		if (!artifact.exists()) { throw new Exception(); }	//TODO 改良 exception
 
-		return find(museum).translate(DataUtil.load(artifact, "UTF-8", ""));
+		ArtifactM result = find(museum).translate(DataUtil.load(artifact, "UTF-8", ""));
+		result.setMuseum(museum);
+		result.setUrlId(urlId);
+		return result;
 	}
 
 	/**
