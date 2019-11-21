@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.ImageUrl;
 import us.dontcareabout.cmc.common.shared.Museum;
+import us.dontcareabout.cmc.common.shared.MuseumUtil;
 
 /**
  * 結合 {@link ArtifactGS} 與 {@link ArtifactM} 的完整 artifact
@@ -24,6 +25,10 @@ public class Artifact {
 
 	public Museum getMuseum() {
 		return museum;
+	}
+
+	public String getUrlId() {
+		return MuseumUtil.parseUrlId(museum, getUrl());
 	}
 
 	//Google Sheet

@@ -56,12 +56,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 				Window.open(MuseumUtil.purgeUrl(item.museum, item.getUrl()), "_blank", null);
 			}
 		});
-		ColumnConfig<Artifact, String> urlId = new ColumnConfig<>(new GetValueProvider<Artifact, String>() {
-			@Override
-			public String getValue(Artifact object) {
-				return MuseumUtil.parseUrlId(object.museum, object.getUrl());
-			}
-		}, 100, "網址 ID");
+		ColumnConfig<Artifact, String> urlId = new ColumnConfig<>(properties.urlId(), 100, "網址 ID");
 		urlId.setCell(open);
 		urlId.setFixed(true);
 
@@ -89,7 +84,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		ListStore<Artifact> result = new ListStore<>(new ModelKeyProvider<Artifact>() {
 			@Override
 			public String getKey(Artifact item) {
-				return MuseumUtil.artifactId(item.museum, MuseumUtil.parseUrlId(item.museum, item.getUrl()));
+				return MuseumUtil.artifactId(item.museum, item.getUrlId());
 			}
 		});
 		return result;
@@ -113,6 +108,8 @@ public class ArtifactGrid extends Grid2<Artifact> {
 	}
 
 	interface Properties extends PropertyAccess<Artifact> {
+		ValueProvider<Artifact, String> urlId();
+
 		ValueProvider<Artifact, String> note();
 		ValueProvider<Artifact, Double> score();
 
