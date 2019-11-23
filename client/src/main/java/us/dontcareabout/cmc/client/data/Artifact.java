@@ -14,9 +14,10 @@ public class Artifact {
 	public final Museum museum;
 	private final ArtifactGS fromGS;
 
-	//對 client 來說 ArtifactM 不必然有
-	//為了省去 delegate method 一堆判斷 null 的 code，所以預設塞一個空殼
-	private  ArtifactM fromM = new ArtifactM();
+	//原本預設會塞一個空的 instance
+	//但是使用者希望知道該筆 artifact 是不是有抓到資料 or 博物館本來就沒有提供資料
+	//為了不用相對奇怪的招數（例如用 name 判斷 XD），所以還是改用 null 作為預設值
+	private  ArtifactM fromM;
 
 	public Artifact(Museum museum, ArtifactGS gs) {
 		this.museum = museum;
@@ -29,6 +30,10 @@ public class Artifact {
 
 	public String getUrlId() {
 		return MuseumUtil.parseUrlId(museum, getUrl());
+	}
+
+	public boolean isReady() {
+		return fromM != null;
 	}
 
 	//Google Sheet
@@ -59,31 +64,31 @@ public class Artifact {
 	}
 
 	public String getName() {
-		return fromM.getName();
+		return isReady() ? fromM.getName() : "";
 	}
 
 	public String getEra() {
-		return fromM.getEra();
+		return isReady() ? fromM.getEra() : "";
 	}
 
 	public String getOrigin() {
-		return fromM.getOrigin();
+		return isReady() ? fromM.getOrigin() : "";
 	}
 
 	public String getMaterial() {
-		return fromM.getMaterial();
+		return isReady() ? fromM.getMaterial() : "";
 	}
 
 	public String getDescription() {
-		return fromM.getDescription();
+		return isReady() ? fromM.getDescription() : "";
 	}
 
 	public String getDimensions() {
-		return fromM.getDimensions();
+		return isReady() ? fromM.getDimensions() : "";
 	}
 
 	public ArrayList<ImageUrl> getImage() {
-		return fromM.getImage();
+		return isReady() ? fromM.getImage() : new ArrayList<ImageUrl>();
 	}
 	////
 }
