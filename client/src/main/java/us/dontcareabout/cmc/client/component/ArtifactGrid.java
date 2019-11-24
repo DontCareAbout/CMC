@@ -97,7 +97,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 					sb.appendHtmlConstant(
 						"<img style='margin: 0 5px 0 0; cursor: pointer;' src='" + iu.getStandard() + "' " +
 						//用開新視窗的方式呈現完整圖
-						(iu.getFullSize() != null ? "" : "onclick='window.open(\"" + iu.getFullSize() + "\", \"_blank\", null);'")
+						(iu.getFullSize() == null ? "" : "onclick='window.open(\"" + iu.getFullSize() + "\", \"_blank\", null);'")
 						+ " />"
 					);
 				}
