@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.nmorel.gwtjackson.client.ObjectReader;
-import com.github.nmorel.gwtjackson.client.ObjectWriter;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.SimpleEventBus;
 
@@ -18,9 +15,6 @@ import us.dontcareabout.cmc.common.shared.Selection;
 import us.dontcareabout.gwt.client.google.Sheet;
 import us.dontcareabout.gwt.client.google.SheetHappen;
 import us.dontcareabout.gwt.client.google.SheetHappen.Callback;
-import us.dontcareabout.gwt.client.websocket.WebSocket;
-import us.dontcareabout.gwt.client.websocket.event.MessageEvent;
-import us.dontcareabout.gwt.client.websocket.event.MessageHandler;
 
 public class DataCenter {
 	private final static SimpleEventBus eventBus = new SimpleEventBus();
@@ -71,24 +65,7 @@ public class DataCenter {
 
 	////////////////
 
-	private static final String SERVER = "localhost:8080/server/";	//FIXME 改讀 local setting
-	private static final WebSocket ws = new WebSocket("ws://" + SERVER + "spring/websocket");
-
-	static interface SelectionWriter extends ObjectWriter<Selection> {}
-	static interface ArtifactMReader extends ObjectReader<List<ArtifactM>> {}
-
-	private static SelectionWriter writer = GWT.create(SelectionWriter.class);
-	private static ArtifactMReader reader = GWT.create(ArtifactMReader.class);
-
-	static {
-		ws.addMessageHandler(new MessageHandler() {
-			@Override
-			public void onMessage(MessageEvent e) {
-				eventBus.fireEvent(new ArtifactMReadyEvent(reader.read(e.getMessage())));
-			}
-		});
-		ws.open();
-	}
+	private static WSClient ws = new WSClient();
 
 	public static void wantArtifactM(List<Artifact> list) {
 		Selection selection = new Selection();
@@ -98,10 +75,18 @@ public class DataCenter {
 			selection.getUrlId().add(a.getUrlId());
 		}
 
-		ws.send(writer.write(selection));
+		ws.request(selection);
 	}
 
 	public static HandlerRegistration addArtifactMReady(ArtifactMReadyHandler handler) {
 		return eventBus.addHandler(ArtifactMReadyEvent.TYPE, handler);
+	}
+
+	public static void wsConnect() {
+		ws.connect();
+	}
+
+	static void artifactMReady(List<ArtifactM> data) {
+		eventBus.fireEvent(new ArtifactMReadyEvent(data));
 	}
 }
