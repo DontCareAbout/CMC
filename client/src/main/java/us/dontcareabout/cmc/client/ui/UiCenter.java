@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.container.Viewport;
+import com.sencha.gxt.widget.core.client.info.Info;
 
 import us.dontcareabout.cmc.client.data.SheetId;
 import us.dontcareabout.cmc.client.ui.event.RefreshSheetIdStoreEvent;
@@ -32,6 +33,17 @@ public class UiCenter {
 
 	public static HandlerRegistration addRefreshSheetIdStore(RefreshSheetIdStoreHandler handler) {
 		return eventBus.addHandler(RefreshSheetIdStoreEvent.TYPE, handler);
+	}
+
+	////////////////
+
+	public static void wsError() {
+		Info.display("連線發生錯誤", "請檢查設定值以及 Server 狀態並重新連線");
+	}
+
+	public static void wsOpenException() {
+		//目前也只知道這個發生可能，所以畫面上就寫死提示訊息
+		Info.display("連線失敗", "Server URL 格式有誤");
 	}
 
 	////////////////////////////////
