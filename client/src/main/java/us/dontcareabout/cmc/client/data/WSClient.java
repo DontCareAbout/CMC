@@ -10,8 +10,14 @@ import us.dontcareabout.cmc.client.Parameter;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.Selection;
 import us.dontcareabout.gwt.client.websocket.WebSocket;
+import us.dontcareabout.gwt.client.websocket.event.CloseEvent;
+import us.dontcareabout.gwt.client.websocket.event.CloseHandler;
+import us.dontcareabout.gwt.client.websocket.event.ErrorEvent;
+import us.dontcareabout.gwt.client.websocket.event.ErrorHandler;
 import us.dontcareabout.gwt.client.websocket.event.MessageEvent;
 import us.dontcareabout.gwt.client.websocket.event.MessageHandler;
+import us.dontcareabout.gwt.client.websocket.event.OpenEvent;
+import us.dontcareabout.gwt.client.websocket.event.OpenHandler;
 
 public class WSClient {
 	private static SelectionWriter writer = GWT.create(SelectionWriter.class);
@@ -24,6 +30,24 @@ public class WSClient {
 			@Override
 			public void onMessage(MessageEvent e) {
 				DataCenter.artifactMReady(reader.read(e.getMessage()));
+			}
+		});
+		ws.addErrorHandler(new ErrorHandler() {
+			@Override
+			public void onError(ErrorEvent e) {
+				DataCenter.wsError(e);
+			}
+		});
+		ws.addOpenHandler(new OpenHandler() {
+			@Override
+			public void onOpen(OpenEvent e) {
+				DataCenter.changeWsReady(true);
+			}
+		});
+		ws.addCloseHandler(new CloseHandler() {
+			@Override
+			public void onClose(CloseEvent e) {
+				DataCenter.changeWsReady(false);
 			}
 		});
 		connect();
