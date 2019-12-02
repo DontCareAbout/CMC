@@ -12,6 +12,8 @@ import com.google.common.io.Files;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.MuseumUtil;
+import us.dontcareabout.cmc.server.museum.exception.ArtifactNotExistException;
+import us.dontcareabout.cmc.server.museum.exception.MuseumNotReadyException;
 
 public class CollectionManager {
 	private final HashMap<Museum, Researcher> map = new HashMap<>();
@@ -40,10 +42,10 @@ public class CollectionManager {
 	/**
 	 * 從 CMC 的 collection 取得文物資料。
 	 */
-	public ArtifactM obtain(Museum museum, String urlId) throws Exception {
+	public ArtifactM obtain(Museum museum, String urlId) throws ArtifactNotExistException, MuseumNotReadyException, IOException {
 		File artifact = locate(museum, urlId);
 
-		if (!artifact.exists()) { throw new Exception(); }	//TODO 改良 exception
+		if (!artifact.exists()) { throw new ArtifactNotExistException(); }
 
 		ArtifactM result = find(museum).translate(DataUtil.load(artifact, "UTF-8", ""));
 		result.setMuseum(museum);
@@ -66,10 +68,10 @@ public class CollectionManager {
 		return new File(storage, MuseumUtil.artifactId(museum, urlId));
 	}
 
-	private Researcher find(Museum museum) throws Exception {
+	private Researcher find(Museum museum) throws MuseumNotReadyException {
 		Researcher collector = map.get(museum);
 
-		if (collector == null) { throw new Exception(); }	//TODO 改良 exception
+		if (collector == null) { throw new MuseumNotReadyException(); }
 
 		return collector;
 	}

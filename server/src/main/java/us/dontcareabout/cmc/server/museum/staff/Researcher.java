@@ -1,7 +1,5 @@
 package us.dontcareabout.cmc.server.museum.staff;
 
-import java.io.IOException;
-
 import org.jsoup.nodes.Document;
 
 import us.dontcareabout.cmc.common.shared.ArtifactM;
@@ -19,5 +17,5 @@ public interface Researcher {
 	/**
 	 * 將網頁內容轉換為 {@link ArtifactM}。
 	 */
-	ArtifactM translate(Document html) throws IOException;
+	ArtifactM translate(Document html);
 }

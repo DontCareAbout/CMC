@@ -1,6 +1,5 @@
 package us.dontcareabout.cmc.server.museum.collection;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import org.jsoup.Jsoup;
@@ -23,7 +22,7 @@ public class Met implements Researcher {
 	}
 
 	@Override
-	public ArtifactM translate(Document doc) throws IOException {
+	public ArtifactM translate(Document doc) {
 		ArtifactM result = new ArtifactM();
 
 		result.setName(text(doc.getElementsByClass("artwork__title--text")));
