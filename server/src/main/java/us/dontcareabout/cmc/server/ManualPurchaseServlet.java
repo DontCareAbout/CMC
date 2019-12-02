@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.MuseumUtil;
-import us.dontcareabout.cmc.server.museum.staff.CollectionManager;
+import us.dontcareabout.cmc.server.museum.Service;
 
 /**
  * 手動儲存數位典藏網頁的 HTTP 窗口。
@@ -29,8 +29,6 @@ public class ManualPurchaseServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Setting setting = new Setting();
 
-	private CollectionManager registar = new CollectionManager(setting.workspace());
-
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
@@ -43,7 +41,7 @@ public class ManualPurchaseServlet extends HttpServlet {
 
 		for (Museum museum : Museum.values()) {
 			if (url.startsWith(museum.url)) {
-				registar.store(
+				Service.collection.store(
 					museum,
 					MuseumUtil.parseUrlId(museum, url),
 					//目前是設計 bookmarklet 來簡化操作

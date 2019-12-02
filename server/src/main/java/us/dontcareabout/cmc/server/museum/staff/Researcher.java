@@ -12,7 +12,7 @@ public interface Researcher {
 	/**
 	 * 取回數位典藏網頁內容。
 	 */
-	String transport(String urlId) throws Exception;
+	String artifactUrl(String urlId);
 
 	/**
 	 * 將網頁內容轉換為 {@link ArtifactM}。

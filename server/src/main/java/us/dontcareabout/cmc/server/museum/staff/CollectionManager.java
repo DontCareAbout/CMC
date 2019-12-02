@@ -12,15 +12,18 @@ import com.google.common.io.Files;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.MuseumUtil;
+import us.dontcareabout.cmc.server.chrome.Agent;
 import us.dontcareabout.cmc.server.museum.exception.ArtifactNotExistException;
 import us.dontcareabout.cmc.server.museum.exception.MuseumNotReadyException;
 
 public class CollectionManager {
 	private final HashMap<Museum, Researcher> map = new HashMap<>();
 	private final File storage;
+	private final Agent agent;
 
-	public CollectionManager(String storageFolder) {
+	public CollectionManager(String storageFolder, String chromeFolder) {
 		storage = new File(storageFolder);
+		agent = new Agent(chromeFolder, 10);
 
 		if (!storage.exists()) { storage.mkdirs(); }
 	}
@@ -36,7 +39,7 @@ public class CollectionManager {
 	 * 從各博物館網頁把資料抓回來儲存。
 	 */
 	public void purchase(Museum museum, String urlId) throws Exception {
-		store(museum, urlId, find(museum).transport(urlId));
+		agent.fetch(find(museum).artifactUrl(urlId), locate(museum, urlId));
 	}
 
 	/**

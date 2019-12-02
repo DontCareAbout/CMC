@@ -8,7 +8,7 @@ import us.dontcareabout.cmc.server.museum.staff.CollectionManager;
 public class Service {
 	private static final Setting setting = new Setting();
 
-	public static final CollectionManager collection = new CollectionManager(setting.workspace());
+	public static final CollectionManager collection = new CollectionManager(setting.workspace(), setting.chromeFolder());
 	static {
 		collection.recruit(Museum.Met, new Met());
 	}

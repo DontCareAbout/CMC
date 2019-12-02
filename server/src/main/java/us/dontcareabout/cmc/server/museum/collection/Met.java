@@ -2,7 +2,6 @@ package us.dontcareabout.cmc.server.museum.collection;
 
 import java.util.HashMap;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -14,11 +13,8 @@ import us.dontcareabout.cmc.server.museum.staff.Researcher;
 
 public class Met implements Researcher {
 	@Override
-	public String transport(String urlId) throws Exception {
-		//開發測試時有被 Met 認定是機器人不給抓的經驗（包含用 headless Chrome）
-		//XXX 需要再確認實作方式
-		return Jsoup.connect(Museum.Met.url + urlId).validateTLSCertificates(false)
-			.get().toString();
+	public String artifactUrl(String urlId) {
+		return Museum.Met.url + urlId;
 	}
 
 	@Override
