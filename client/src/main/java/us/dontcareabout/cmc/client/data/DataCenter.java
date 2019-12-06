@@ -25,6 +25,7 @@ public class DataCenter {
 
 	////////////////
 
+	private static int tabIndex;
 	private static ArrayList<Artifact> artifactList;
 
 	public static List<Artifact> getArtifact() {
@@ -32,39 +33,48 @@ public class DataCenter {
 	}
 
 	public static void wantArtifact(String sheetId) {
-		//TODO 處理多個 museum work sheet
-		int index = 1;
-		SheetHappen.get(SheetId.get(), index, new Callback<ArtifactGS>() {
+		tabIndex = 0;
+		artifactList = new ArrayList<>();
+		fetchSheet();
+	}
+
+	public static HandlerRegistration addArtifactReady(ArtifactReadyHandler handler) {
+		return eventBus.addHandler(ArtifactReadyEvent.TYPE, handler);
+	}
+
+	private static void fetchSheet() {
+		tabIndex++;
+
+		SheetHappen.get(SheetId.get(), tabIndex, new Callback<ArtifactGS>() {
 			@Override
 			public void onSuccess(Sheet<ArtifactGS> gs) {
-				artifactList = new ArrayList<>();
 				Museum museum = null;
 
 				for (Museum m : Museum.values()) {
-					if (m.name().equals(gs.getTitle())) {
+					if (m.title.equals(gs.getTitle())) {
 						museum = m;
+						break;
 					}
 				}
 
-				if (museum == null) { return; }
+				if (museum == null) { fetchSheet(); }
 
 				for (ArtifactGS ags : gs.getEntry()) {
 					Artifact item = new Artifact(museum, ags);
 					artifactList.add(item);
 				}
 
-				eventBus.fireEvent(new ArtifactReadyEvent());
+				fetchSheet();
 			}
 
 			@Override
 			public void onError(Throwable exception) {
-				// TODO Auto-generated method stub
+				//tabIndex 超出 sheet 的範圍就會炸到這裡來（因為 url 的確抓不到東西 XD）
+				//但是其他 error 也一樣會到這邊來
+				//目前沒有更妥善的辦法，所以就...... 就這樣...... [逃]
+				eventBus.fireEvent(new ArtifactReadyEvent());
 			}
 		});
-	}
-
-	public static HandlerRegistration addArtifactReady(ArtifactReadyHandler handler) {
-		return eventBus.addHandler(ArtifactReadyEvent.TYPE, handler);
 	}
 
 	////////////////
