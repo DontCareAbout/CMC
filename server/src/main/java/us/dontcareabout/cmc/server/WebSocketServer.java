@@ -13,8 +13,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.Gson;
 
+import us.dontcareabout.cmc.common.shared.ArtifactId;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
-import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.Selection;
 import us.dontcareabout.cmc.server.museum.Service;
 import us.dontcareabout.cmc.server.museum.exception.ArtifactNotExistException;
@@ -33,7 +33,7 @@ public class WebSocketServer extends TextWebSocketHandler implements WebSocketCo
 	 * 以避免在還沒抓回來之前，使用者不斷重複發出 request。
 	 * XXX 這是小規模的便宜行事實作，有 OOM 的風險...... XD
 	 */
-	private final HashSet<Argument> purchaseSet = new HashSet<>();
+	private final HashSet<ArtifactId> purchaseSet = new HashSet<>();
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -47,7 +47,7 @@ public class WebSocketServer extends TextWebSocketHandler implements WebSocketCo
 		ArrayList<ArtifactM> result = new ArrayList<>();
 
 		for (String urlId : selection.getUrlId()) {
-			Argument argument = new Argument(selection.getMuseum(), urlId);
+			ArtifactId argument = new ArtifactId(selection.getMuseum(), urlId);
 			try {
 				result.add(Service.collection.obtain(selection.getMuseum(), urlId));
 
@@ -75,46 +75,5 @@ public class WebSocketServer extends TextWebSocketHandler implements WebSocketCo
 
 	private void send(WebSocketSession session, String message) throws IOException {
 		session.sendMessage(new TextMessage(message));
-	}
-
-	//Refactory 考慮變成 common VO？
-	private class Argument {
-		final Museum museum;
-		final String urlId;
-
-		Argument(Museum museum, String urlId) {
-			this.museum = museum;
-			this.urlId = urlId;
-		}
-
-		// ======== gen by Eclipse ======== //
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((museum == null) ? 0 : museum.hashCode());
-			result = prime * result + ((urlId == null) ? 0 : urlId.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Argument other = (Argument) obj;
-			if (museum != other.museum)
-				return false;
-			if (urlId == null) {
-				if (other.urlId != null)
-					return false;
-			} else if (!urlId.equals(other.urlId))
-				return false;
-			return true;
-		}
-		// ================ //
 	}
 }
