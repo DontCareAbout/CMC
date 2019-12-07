@@ -123,7 +123,6 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		getStore().replaceAll(data);
 		checkEmpty();
 		expandMap.clear();
-		((GroupingView<?>)getView()).collapseAllGroups();
 	}
 
 	public void injectArtifactM(List<ArtifactM> data) {
@@ -203,6 +202,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		view.setShowGroupedColumn(false);
 		view.setForceFit(true);
 		view.groupBy(museumCC);
+		view.setStartCollapsed(true);
 		view.addExpandHandler(new ExpandItemHandler<List<Artifact>>() {
 			@Override
 			public void onExpand(ExpandItemEvent<List<Artifact>> event) {
