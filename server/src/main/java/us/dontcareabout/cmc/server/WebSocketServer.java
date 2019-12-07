@@ -47,21 +47,21 @@ public class WebSocketServer extends TextWebSocketHandler implements WebSocketCo
 		ArrayList<ArtifactM> result = new ArrayList<>();
 
 		for (String urlId : selection.getUrlId()) {
-			ArtifactId argument = new ArtifactId(selection.getMuseum(), urlId);
+			ArtifactId aid = new ArtifactId(selection.getMuseum(), urlId);
 			try {
-				result.add(Service.collection.obtain(selection.getMuseum(), urlId));
+				result.add(Service.collection.obtain(aid));
 
 				//因為 artifact 已經有了，所以檢查是不是存在 purchaseSet 當中
 				//以避免 purchaseSet 無限制膨脹
-				if (purchaseSet.contains(argument)) {
-					purchaseSet.remove(argument);
+				if (purchaseSet.contains(aid)) {
+					purchaseSet.remove(aid);
 				}
 			} catch (ArtifactNotExistException e) {
 				//找不到的文物就要買(X) 抓(O) 回來
-				if (purchaseSet.contains(argument)) { continue; }
+				if (purchaseSet.contains(aid)) { continue; }
 
-				Service.collection.purchase(selection.getMuseum(), urlId);
-				purchaseSet.add(argument);
+				Service.collection.purchase(aid);
+				purchaseSet.add(aid);
 			} catch (MuseumNotReadyException e) {
 				//理論上不會發生，不過還是噴個訊息
 				System.out.println(selection.getMuseum() + " is not ready"); //TODO 改 log 機制

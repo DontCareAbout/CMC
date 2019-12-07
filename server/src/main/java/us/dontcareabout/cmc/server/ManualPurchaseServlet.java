@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import us.dontcareabout.cmc.common.shared.ArtifactId;
 import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.MuseumUtil;
 import us.dontcareabout.cmc.server.museum.Service;
@@ -27,7 +28,6 @@ import us.dontcareabout.cmc.server.museum.Service;
 @MultipartConfig
 public class ManualPurchaseServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Setting setting = new Setting();
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,8 +42,8 @@ public class ManualPurchaseServlet extends HttpServlet {
 		for (Museum museum : Museum.values()) {
 			if (url.startsWith(museum.url)) {
 				Service.collection.store(
-					museum,
-					MuseumUtil.parseUrlId(museum, url),
+					//Refactory
+					new ArtifactId(museum, MuseumUtil.parseUrlId(museum, url)),
 					//目前是設計 bookmarklet 來簡化操作
 					//但是懶得在 JS 作太細緻的處理，所以就偷懶了..... XD
 					"<html>" + html + "</html>"

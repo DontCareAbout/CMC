@@ -9,9 +9,9 @@ import org.jsoup.helper.DataUtil;
 
 import com.google.common.io.Files;
 
+import us.dontcareabout.cmc.common.shared.ArtifactId;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.Museum;
-import us.dontcareabout.cmc.common.shared.MuseumUtil;
 import us.dontcareabout.cmc.server.chrome.Agent;
 import us.dontcareabout.cmc.server.museum.exception.ArtifactNotExistException;
 import us.dontcareabout.cmc.server.museum.exception.MuseumNotReadyException;
@@ -38,37 +38,40 @@ public class CollectionManager {
 	/**
 	 * 從各博物館網頁把資料抓回來儲存。
 	 */
-	public void purchase(Museum museum, String urlId) throws Exception {
-		agent.fetch(find(museum).artifactUrl(urlId), locate(museum, urlId));
+	public void purchase(ArtifactId aid) throws Exception {
+		agent.fetch(
+			find(aid.getMuseum()).artifactUrl(aid.getUrlId()),
+			locate(aid)
+		);
 	}
 
 	/**
 	 * 從 CMC 的 collection 取得文物資料。
 	 */
-	public ArtifactM obtain(Museum museum, String urlId) throws ArtifactNotExistException, MuseumNotReadyException, IOException {
-		File artifact = locate(museum, urlId);
+	public ArtifactM obtain(ArtifactId aid) throws ArtifactNotExistException, MuseumNotReadyException, IOException {
+		File artifact = locate(aid);
 
 		if (!artifact.exists()) { throw new ArtifactNotExistException(); }
 
-		ArtifactM result = find(museum).translate(DataUtil.load(artifact, "UTF-8", ""));
-		result.setMuseum(museum);
-		result.setUrlId(urlId);
+		ArtifactM result = find(aid.getMuseum()).translate(DataUtil.load(artifact, "UTF-8", ""));
+		result.setMuseum(aid.getMuseum());
+		result.setUrlId(aid.getUrlId());
 		return result;
 	}
 
 	/**
 	 * 將網頁資料儲存到 CMC 的 collection 當中。
 	 */
-	public void store(Museum museum, String urlId, String html) throws IOException {
+	public void store(ArtifactId aid, String html) throws IOException {
 		Files.write(
 			html,
-			locate(museum, urlId),
+			locate(aid),
 			StandardCharsets.UTF_8
 		);
 	}
 
-	private File locate(Museum museum, String urlId) {
-		return new File(storage, MuseumUtil.artifactId(museum, urlId));
+	private File locate(ArtifactId aid) {
+		return new File(storage, aid.toString());
 	}
 
 	private Researcher find(Museum museum) throws MuseumNotReadyException {
