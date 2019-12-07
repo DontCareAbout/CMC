@@ -3,6 +3,7 @@ package us.dontcareabout.cmc.server.museum;
 import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.server.Setting;
 import us.dontcareabout.cmc.server.museum.collection.Met;
+import us.dontcareabout.cmc.server.museum.collection.RoyalArmouries;
 import us.dontcareabout.cmc.server.museum.staff.CollectionManager;
 
 public class Service {
@@ -11,5 +12,6 @@ public class Service {
 	public static final CollectionManager collection = new CollectionManager(setting.workspace(), setting.chromeFolder());
 	static {
 		collection.recruit(Museum.Met, new Met());
+		collection.recruit(Museum.RoyalArmouries, new RoyalArmouries());
 	}
 }

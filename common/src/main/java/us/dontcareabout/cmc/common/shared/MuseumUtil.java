@@ -6,13 +6,25 @@ public class MuseumUtil {
 		case Met:
 			int index = url.indexOf("?");
 			return url.substring(Museum.Met.url.length(), index == -1 ? url.length() : index);
+		case RoyalArmouries:
+			return url.substring(Museum.RoyalArmouries.url.length(), url.length() - 5);
 		}
 
-		throw new IllegalArgumentException(museum + "is undefined");
+		throw new IllegalArgumentException(museum + " is undefined");
 	}
 
+	//Refactory 跟 Researcher.artifactUrl() 功能重複？
 	public static String purgeUrl(Museum museum, String url) {
-		return museum.url + parseUrlId(museum, url);
+		switch(museum) {
+		//urlId 結尾區
+		case Met:
+			return museum.url + parseUrlId(museum, url);
+		//本來就很乾淨區
+		case RoyalArmouries:
+			return url;
+		default:
+			return null;
+		}
 	}
 
 	/**
