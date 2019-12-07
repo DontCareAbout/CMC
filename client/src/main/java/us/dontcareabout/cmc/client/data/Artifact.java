@@ -2,6 +2,7 @@ package us.dontcareabout.cmc.client.data;
 
 import java.util.ArrayList;
 
+import us.dontcareabout.cmc.common.shared.ArtifactId;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.ImageUrl;
 import us.dontcareabout.cmc.common.shared.Museum;
@@ -11,7 +12,7 @@ import us.dontcareabout.cmc.common.shared.MuseumUtil;
  * 結合 {@link ArtifactGS} 與 {@link ArtifactM} 的完整 artifact
  */
 public class Artifact {
-	public final Museum museum;
+	private final ArtifactId id;
 	private final ArtifactGS fromGS;
 
 	//原本預設會塞一個空的 instance
@@ -20,16 +21,12 @@ public class Artifact {
 	private  ArtifactM fromM;
 
 	public Artifact(Museum museum, ArtifactGS gs) {
-		this.museum = museum;
 		this.fromGS = gs;
+		id = new ArtifactId(museum, MuseumUtil.parseUrlId(museum, getUrl()));
 	}
 
-	public Museum getMuseum() {
-		return museum;
-	}
-
-	public String getUrlId() {
-		return MuseumUtil.parseUrlId(museum, getUrl());
+	public ArtifactId getId() {
+		return id;
 	}
 
 	public boolean isReady() {

@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.common.base.Strings;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.editor.client.Editor.Path;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
 import com.sencha.gxt.cell.core.client.TextButtonCell;
@@ -109,7 +110,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		new GetValueProvider<Artifact, String>() {
 			@Override
 			public String getValue(Artifact object) {
-				return object.museum.name();
+				return object.getId().getMuseum().title;
 			}
 		}
 	);
@@ -144,7 +145,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 			@Override
 			public void onSelect(SelectEvent event) {
 				Artifact item = store.get(event.getContext().getIndex());
-				Window.open(MuseumUtil.purgeUrl(item.museum, item.getUrl()), "_blank", null);
+				Window.open(MuseumUtil.purgeUrl(item.getId().getMuseum(), item.getUrl()), "_blank", null);
 			}
 		});
 		ColumnConfig<Artifact, String> urlId = new ColumnConfig<>(properties.urlId(), 100, "網址 ID");
@@ -190,7 +191,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		ListStore<Artifact> result = new ListStore<>(new ModelKeyProvider<Artifact>() {
 			@Override
 			public String getKey(Artifact item) {
-				return MuseumUtil.artifactId(item.museum, item.getUrlId());
+				return item.getId().toString();
 			}
 		});
 		return result;
@@ -206,7 +207,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		view.addExpandHandler(new ExpandItemHandler<List<Artifact>>() {
 			@Override
 			public void onExpand(ExpandItemEvent<List<Artifact>> event) {
-				Museum museum = event.getItem().get(0).getMuseum();
+				Museum museum = event.getItem().get(0).getId().getMuseum();
 				Boolean hasExpanded = expandMap.get(museum);
 
 				//已經要過得就不再要了
@@ -230,6 +231,8 @@ public class ArtifactGrid extends Grid2<Artifact> {
 
 	interface Properties extends PropertyAccess<Artifact> {
 		ValueProvider<Artifact, Boolean> ready();
+
+		@Path("id.urlId")
 		ValueProvider<Artifact, String> urlId();
 
 		ValueProvider<Artifact, String> note();

@@ -85,10 +85,10 @@ public class DataCenter {
 
 	public static void wantArtifactM(List<Artifact> list) {
 		Selection selection = new Selection();
-		selection.setMuseum(list.get(0).getMuseum());
+		selection.setMuseum(list.get(0).getId().getMuseum());
 
 		for (Artifact a : list) {
-			selection.getUrlId().add(a.getUrlId());
+			selection.getUrlId().add(a.getId().getUrlId());
 		}
 
 		if (wsReady) {

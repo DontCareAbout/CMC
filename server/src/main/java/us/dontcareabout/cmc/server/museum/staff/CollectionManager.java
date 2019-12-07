@@ -54,8 +54,7 @@ public class CollectionManager {
 		if (!artifact.exists()) { throw new ArtifactNotExistException(); }
 
 		ArtifactM result = find(aid.getMuseum()).translate(DataUtil.load(artifact, "UTF-8", ""));
-		result.setMuseum(aid.getMuseum());
-		result.setUrlId(aid.getUrlId());
+		result.setId(aid);
 		return result;
 	}
 
