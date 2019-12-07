@@ -127,7 +127,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 
 	public void injectArtifactM(List<ArtifactM> data) {
 		for (ArtifactM am : data) {
-			Artifact a = getStore().findModelWithKey(MuseumUtil.artifactId(am.getMuseum(), am.getUrlId()));
+			Artifact a = getStore().findModelWithKey(am.getId().toString());
 
 			if (a == null) { continue; }	//理論上不會發生 XD
 

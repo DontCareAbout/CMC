@@ -6,9 +6,7 @@ import java.util.ArrayList;
  * 博物館系統提供的 artifact 資訊。
  */
 public class ArtifactM {
-	private Museum museum;
-	private String urlId;
-
+	private ArtifactId id;
 	private String name;
 	private String era;
 	private String origin;
@@ -17,17 +15,11 @@ public class ArtifactM {
 	private String dimensions;
 	private ArrayList<ImageUrl> image = new ArrayList<>();
 
-	public Museum getMuseum() {
-		return museum;
+	public ArtifactId getId() {
+		return id;
 	}
-	public void setMuseum(Museum museum) {
-		this.museum = museum;
-	}
-	public String getUrlId() {
-		return urlId;
-	}
-	public void setUrlId(String urlId) {
-		this.urlId = urlId;
+	public void setId(ArtifactId id) {
+		this.id = id;
 	}
 	public String getName() {
 		return name;

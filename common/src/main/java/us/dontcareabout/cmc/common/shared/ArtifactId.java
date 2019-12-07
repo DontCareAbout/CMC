@@ -4,6 +4,8 @@ public final class ArtifactId {
 	private Museum museum;
 	private String urlId;
 
+	ArtifactId() {}	//for gwt-jackson
+
 	public ArtifactId(Museum museum, String urlId) {
 		this.museum = museum;
 		this.urlId = urlId;
