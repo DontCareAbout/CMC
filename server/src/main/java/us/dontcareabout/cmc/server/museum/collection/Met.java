@@ -8,15 +8,9 @@ import org.jsoup.select.Elements;
 
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.ImageUrl;
-import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.server.museum.staff.Researcher;
 
 public class Met implements Researcher {
-	@Override
-	public String artifactUrl(String urlId) {
-		return Museum.Met.url + urlId;
-	}
-
 	@Override
 	public ArtifactM translate(Document doc) {
 		ArtifactM result = new ArtifactM();

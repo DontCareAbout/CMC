@@ -10,11 +10,6 @@ import us.dontcareabout.cmc.common.shared.ArtifactM;
  */
 public interface Researcher {
 	/**
-	 * 取回數位典藏網頁內容。
-	 */
-	String artifactUrl(String urlId);
-
-	/**
 	 * 將網頁內容轉換為 {@link ArtifactM}。
 	 */
 	ArtifactM translate(Document html);

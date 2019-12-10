@@ -145,7 +145,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 			@Override
 			public void onSelect(SelectEvent event) {
 				Artifact item = store.get(event.getContext().getIndex());
-				Window.open(MuseumUtil.purgeUrl(item.getId().getMuseum(), item.getUrl()), "_blank", null);
+				Window.open(MuseumUtil.toUrl(item.getId()), "_blank", null);
 			}
 		});
 		ColumnConfig<Artifact, String> urlId = new ColumnConfig<>(properties.urlId(), 100, "網址 ID");

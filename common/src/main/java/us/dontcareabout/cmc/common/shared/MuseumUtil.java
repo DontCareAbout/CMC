@@ -17,6 +17,18 @@ public class MuseumUtil {
 		throw new MuseumNotFoundException(url + " 無對應 Museum");
 	}
 
+	public static String toUrl(ArtifactId aid) {
+		switch(aid.getMuseum()) {
+		//urlId 結尾區
+		case Met:
+			return aid.getMuseum().url + aid.getUrlId();
+		case RoyalArmouries:
+			return aid.getMuseum().url + aid.getUrlId() + ".html";
+		default:
+			return "";	//理論上不會發生
+		}
+	}
+
 	private static String parseUrlId(Museum museum, String url) {
 		switch(museum) {
 		case Met:
@@ -27,19 +39,5 @@ public class MuseumUtil {
 		}
 
 		throw new IllegalArgumentException(museum + " is undefined");
-	}
-
-	//Refactory 跟 Researcher.artifactUrl() 功能重複？
-	public static String purgeUrl(Museum museum, String url) {
-		switch(museum) {
-		//urlId 結尾區
-		case Met:
-			return museum.url + parseUrlId(museum, url);
-		//本來就很乾淨區
-		case RoyalArmouries:
-			return url;
-		default:
-			return null;
-		}
 	}
 }

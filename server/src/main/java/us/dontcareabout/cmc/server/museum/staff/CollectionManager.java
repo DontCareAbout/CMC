@@ -12,6 +12,7 @@ import com.google.common.io.Files;
 import us.dontcareabout.cmc.common.shared.ArtifactId;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.Museum;
+import us.dontcareabout.cmc.common.shared.MuseumUtil;
 import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
 import us.dontcareabout.cmc.server.chrome.Agent;
 import us.dontcareabout.cmc.server.museum.exception.ArtifactNotExistException;
@@ -39,10 +40,7 @@ public class CollectionManager {
 	 * 從各博物館網頁把資料抓回來儲存。
 	 */
 	public void purchase(ArtifactId aid) throws Exception {
-		agent.fetch(
-			find(aid.getMuseum()).artifactUrl(aid.getUrlId()),
-			locate(aid)
-		);
+		agent.fetch(MuseumUtil.toUrl(aid), locate(aid));
 	}
 
 	/**
