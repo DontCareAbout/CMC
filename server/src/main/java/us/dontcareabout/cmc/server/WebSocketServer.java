@@ -16,9 +16,9 @@ import com.google.gson.Gson;
 import us.dontcareabout.cmc.common.shared.ArtifactId;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.Selection;
+import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
 import us.dontcareabout.cmc.server.museum.Service;
 import us.dontcareabout.cmc.server.museum.exception.ArtifactNotExistException;
-import us.dontcareabout.cmc.server.museum.exception.MuseumNotReadyException;
 
 /**
  * 目前所有的 input 都是
@@ -62,7 +62,7 @@ public class WebSocketServer extends TextWebSocketHandler implements WebSocketCo
 
 				Service.collection.purchase(aid);
 				purchaseSet.add(aid);
-			} catch (MuseumNotReadyException e) {
+			} catch (MuseumNotFoundException e) {
 				//理論上不會發生，不過還是噴個訊息
 				System.out.println(selection.getMuseum() + " is not ready"); //TODO 改 log 機制
 			} catch (IOException e) {

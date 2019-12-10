@@ -12,9 +12,9 @@ import com.google.common.io.Files;
 import us.dontcareabout.cmc.common.shared.ArtifactId;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.Museum;
+import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
 import us.dontcareabout.cmc.server.chrome.Agent;
 import us.dontcareabout.cmc.server.museum.exception.ArtifactNotExistException;
-import us.dontcareabout.cmc.server.museum.exception.MuseumNotReadyException;
 
 public class CollectionManager {
 	private final HashMap<Museum, Researcher> map = new HashMap<>();
@@ -48,7 +48,7 @@ public class CollectionManager {
 	/**
 	 * 從 CMC 的 collection 取得文物資料。
 	 */
-	public ArtifactM obtain(ArtifactId aid) throws ArtifactNotExistException, MuseumNotReadyException, IOException {
+	public ArtifactM obtain(ArtifactId aid) throws ArtifactNotExistException, MuseumNotFoundException, IOException {
 		File artifact = locate(aid);
 
 		if (!artifact.exists()) { throw new ArtifactNotExistException(); }
@@ -73,10 +73,10 @@ public class CollectionManager {
 		return new File(storage, aid.toString());
 	}
 
-	private Researcher find(Museum museum) throws MuseumNotReadyException {
+	private Researcher find(Museum museum) throws MuseumNotFoundException {
 		Researcher collector = map.get(museum);
 
-		if (collector == null) { throw new MuseumNotReadyException(); }
+		if (collector == null) { throw new MuseumNotFoundException("缺少 " + museum.title + " Researcher"); }
 
 		return collector;
 	}
