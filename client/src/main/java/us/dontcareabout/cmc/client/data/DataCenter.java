@@ -14,6 +14,7 @@ import us.dontcareabout.cmc.client.ui.UiCenter;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.Selection;
+import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
 import us.dontcareabout.gwt.client.Console;
 import us.dontcareabout.gwt.client.google.Sheet;
 import us.dontcareabout.gwt.client.google.SheetHappen;
@@ -60,8 +61,12 @@ public class DataCenter {
 				if (museum == null) { fetchSheet(); }
 
 				for (ArtifactGS ags : gs.getEntry()) {
-					Artifact item = new Artifact(museum, ags);
-					artifactList.add(item);
+					try {
+						Artifact item = new Artifact(museum, ags);
+						artifactList.add(item);
+					} catch (MuseumNotFoundException e) {
+						//TODO UX 補強
+					}
 				}
 
 				fetchSheet();

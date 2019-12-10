@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import us.dontcareabout.cmc.common.shared.ArtifactId;
 import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.MuseumUtil;
+import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
 import us.dontcareabout.cmc.server.museum.Service;
 
 /**
@@ -39,19 +39,15 @@ public class ManualPurchaseServlet extends HttpServlet {
 
 		if (url == null || html == null) { response.sendError(406); }
 
-		for (Museum museum : Museum.values()) {
-			if (url.startsWith(museum.url)) {
-				Service.collection.store(
-					//Refactory
-					new ArtifactId(museum, MuseumUtil.parseUrlId(museum, url)),
-					//目前是設計 bookmarklet 來簡化操作
-					//但是懶得在 JS 作太細緻的處理，所以就偷懶了..... XD
-					"<html>" + html + "</html>"
-				);
-				return;
-			}
+		try {
+			Service.collection.store(
+				MuseumUtil.toArtifactId(url),
+				//目前是設計 bookmarklet 來簡化操作
+				//但是懶得在 JS 作太細緻的處理，所以就偷懶了..... XD
+				"<html>" + html + "</html>"
+			);
+		} catch (MuseumNotFoundException e) {
+			response.sendError(406);
 		}
-
-		response.sendError(406);
 	}
 }

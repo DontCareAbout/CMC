@@ -1,7 +1,23 @@
 package us.dontcareabout.cmc.common.shared;
 
+import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
+
 public class MuseumUtil {
-	public static String parseUrlId(Museum museum, String url) {
+	public static ArtifactId toArtifactId(String url) throws MuseumNotFoundException {
+		ArtifactId result = new ArtifactId();
+
+		for (Museum m : Museum.values()) {
+			if (url.startsWith(m.url)) {
+				result.setMuseum(m);
+				result.setUrlId(parseUrlId(m, url));
+				return result;
+			}
+		}
+
+		throw new MuseumNotFoundException(url + " 無對應 Museum");
+	}
+
+	private static String parseUrlId(Museum museum, String url) {
 		switch(museum) {
 		case Met:
 			int index = url.indexOf("?");
@@ -25,12 +41,5 @@ public class MuseumUtil {
 		default:
 			return null;
 		}
-	}
-
-	/**
-	 * 這是因應系統運作所產生的定義，與現實世界的 artifact 識別無關。
-	 */
-	public static String artifactId(Museum museum, String urlId) {
-		return museum.name() + "." + urlId;
 	}
 }
