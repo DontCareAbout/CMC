@@ -22,7 +22,6 @@ import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.GridView;
 import com.sencha.gxt.widget.core.client.grid.RowExpander;
 
-import us.dontcareabout.cmc.client.Resources;
 import us.dontcareabout.cmc.client.data.Artifact;
 import us.dontcareabout.cmc.client.data.DataCenter;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
@@ -31,6 +30,7 @@ import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.MuseumUtil;
 import us.dontcareabout.cmc.common.shared.Selection;
 import us.dontcareabout.gxt.client.component.Grid2;
+import us.dontcareabout.gxt.client.model.GetValueProvider;
 
 public class ArtifactGrid extends Grid2<Artifact> {
 	private static final int firstWidth = 100;
@@ -38,10 +38,11 @@ public class ArtifactGrid extends Grid2<Artifact> {
 
 	private RowExpander<Artifact> rowExpander = new RowExpander<Artifact>(
 		new AbstractCell<Artifact>() {
-			final String row1Style = "font-size: 16px; margin: 2px 50px 0px " + (firstWidth + 20) + "px; padding: 8px; background-color: #B3729F; color: white; font-weight: bold;";
-			final String row2Style = "font-size: 14px; margin: 0px 50px 4px " + (firstWidth + 20) + "px; padding: 4px 8px; border: #B3729F 3px solid; line-height: 1.5;";
+			final String row1Style = "font-size: 16px; margin: 2px 50px 0px 50px; padding: 8px; background-color: #B3729F; color: white; font-weight: bold;";
+			final String row2Style = "font-size: 14px; margin: 0px 50px 4px 50px; padding: 4px 8px; border: #B3729F 3px solid; line-height: 1.5;";
 			final String col1Style = "display: table-cell; padding: 8px; background-color: #B3729F; color: white; font-size: 16px; font-weight: bold; width: 150px";
 			final String col2Style = "display: table-cell; padding: 5px 8px; border: #B3729F 1px solid; font-size: 16px; line-height: 1.2;";
+			final int logoSize = 95;
 
 			@Override
 			public void render(Context context, Artifact value, SafeHtmlBuilder sb) {
@@ -49,8 +50,14 @@ public class ArtifactGrid extends Grid2<Artifact> {
 				if (!Strings.isNullOrEmpty(value.getName())
 						|| !Strings.isNullOrEmpty(value.getEra())
 						|| !Strings.isNullOrEmpty(value.getOrigin())) {
+
+					//Museum Logo
+					sb.appendHtmlConstant("<div style='width:" + logoSize + "px;height:" + logoSize + "px;margin:2px 0px 4px 50px;"
+						//後面都是垂直置中需要的鬼玩意
+						+ "float:left;display:flex;justify-content:center;align-items:center;'>");
+					sb.appendHtmlConstant("<img style='width:100%' src='" + value.getId().getMuseum().logo + "' /></div>");
 					//限制 div-table 寬度的 div，因為 div-table 有 border 所以要卡 padding
-					sb.appendHtmlConstant("<div style='margin:2px 50px 4px " + (firstWidth + 20) + "px; padding: 0 4px 0 0;'>");
+					sb.appendHtmlConstant("<div style='margin:2px 50px 4px " + (logoSize + 55) + "px; padding: 0 4px 0 0;'>");
 					//真正的 div-table
 					sb.appendHtmlConstant("<div style='display:table;border: #b3729f solid 2px; width: 100%'>");
 					twoColumn("名稱", value.getName(), sb);
@@ -145,6 +152,22 @@ public class ArtifactGrid extends Grid2<Artifact> {
 
 	@Override
 	protected ColumnModel<Artifact> genColumnModel() {
+		ColumnConfig<Artifact, Artifact> combo = new ColumnConfig<>(new GetValueProvider<Artifact, Artifact>() {
+			@Override
+			public Artifact getValue(Artifact object) {
+				return object;
+			}
+		}, 60, "RowNo.");
+		combo.setCell(new AbstractCell<Artifact>() {
+			@Override
+			public void render(Context context, Artifact value, SafeHtmlBuilder sb) {
+				String notReadyStyle = value.isReady() ? "" : "color:white;background-color:black";
+
+				sb.appendHtmlConstant("<div style='font-size:14px;text-align:center;justify-content:center;align-items:center;" + notReadyStyle + "'>" + value.getIndex() + "</div>");
+			}
+		});
+		combo.setFixed(true);
+
 		TextButtonCell open = new TextButtonCell();
 		open.addSelectHandler(new SelectHandler() {
 			@Override
@@ -168,19 +191,9 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		});
 		score.setFixed(true);
 
-		ColumnConfig<Artifact, Boolean> ready = new ColumnConfig<>(properties.ready(), 32);
-		ready.setCell(new AbstractCell<Boolean>() {
-			@Override
-			public void render(Context context, Boolean value, SafeHtmlBuilder sb) {
-				if (!value) { return; }
-				sb.appendHtmlConstant("<img src='" + Resources.instance.ok().getSafeUri().asString() + "' border='0' width='22' height='22' />");
-			}
-		});
-		ready.setFixed(true);
-
 		ArrayList<ColumnConfig<Artifact, ?>> list = new ArrayList<>();
+		list.add(combo);
 		list.add(rowExpander);
-		list.add(ready);
 		list.add(score);
 		list.add(urlId);
 		list.add(new ColumnConfig<>(properties.name(), 100, "名稱"));
