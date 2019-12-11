@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import us.dontcareabout.cmc.common.shared.ArtifactId;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.ImageUrl;
-import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.MuseumUtil;
 import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
 
@@ -21,7 +20,7 @@ public class Artifact {
 	//為了不用相對奇怪的招數（例如用 name 判斷 XD），所以還是改用 null 作為預設值
 	private  ArtifactM fromM;
 
-	public Artifact(Museum museum, ArtifactGS gs) throws MuseumNotFoundException {
+	public Artifact(ArtifactGS gs) throws MuseumNotFoundException {
 		this.fromGS = gs;
 		id = MuseumUtil.toArtifactId(getUrl());
 	}

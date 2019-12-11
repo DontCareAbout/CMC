@@ -12,7 +12,6 @@ import us.dontcareabout.cmc.client.data.ArtifactReadyEvent.ArtifactReadyHandler;
 import us.dontcareabout.cmc.client.data.WsReadyChangeEvent.WsReadyChangeHandler;
 import us.dontcareabout.cmc.client.ui.UiCenter;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
-import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.Selection;
 import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
 import us.dontcareabout.gwt.client.Console;
@@ -26,7 +25,6 @@ public class DataCenter {
 
 	////////////////
 
-	private static int tabIndex;
 	private static ArrayList<Artifact> artifactList;
 
 	public static List<Artifact> getArtifact() {
@@ -34,54 +32,31 @@ public class DataCenter {
 	}
 
 	public static void wantArtifact(String sheetId) {
-		tabIndex = 0;
 		artifactList = new ArrayList<>();
-		fetchSheet();
-	}
-
-	public static HandlerRegistration addArtifactReady(ArtifactReadyHandler handler) {
-		return eventBus.addHandler(ArtifactReadyEvent.TYPE, handler);
-	}
-
-	private static void fetchSheet() {
-		tabIndex++;
-
-		SheetHappen.get(SheetId.get(), tabIndex, new Callback<ArtifactGS>() {
+		SheetHappen.get(SheetId.get(), new Callback<ArtifactGS>() {
 			@Override
 			public void onSuccess(Sheet<ArtifactGS> gs) {
-				Museum museum = null;
-
-				for (Museum m : Museum.values()) {
-					if (m.title.equals(gs.getTitle())) {
-						museum = m;
-						break;
-					}
-				}
-
-				if (museum == null) { fetchSheet(); }
-
 				for (ArtifactGS ags : gs.getEntry()) {
 					try {
-						Artifact item = new Artifact(museum, ags);
-						artifactList.add(item);
+						artifactList.add(new Artifact(ags));
 					} catch (MuseumNotFoundException e) {
 						//TODO UX 補強
 					}
 				}
 
-				fetchSheet();
+				eventBus.fireEvent(new ArtifactReadyEvent());
 			}
 
 			@Override
 			public void onError(Throwable exception) {
-				//tabIndex 超出 sheet 的範圍就會炸到這裡來（因為 url 的確抓不到東西 XD）
-				//但是其他 error 也一樣會到這邊來
-				//目前沒有更妥善的辦法，所以就...... 就這樣...... [逃]
-				eventBus.fireEvent(new ArtifactReadyEvent());
+				// TODO
 			}
 		});
 	}
 
+	public static HandlerRegistration addArtifactReady(ArtifactReadyHandler handler) {
+		return eventBus.addHandler(ArtifactReadyEvent.TYPE, handler);
+	}
 	////////////////
 
 	private static WSClient ws = new WSClient();
