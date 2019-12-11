@@ -67,6 +67,10 @@ public class CollectionManager {
 		);
 	}
 
+	public void remove(ArtifactId aid) {
+		locate(aid).delete();
+	}
+
 	private File locate(ArtifactId aid) {
 		return new File(storage, aid.toString());
 	}
