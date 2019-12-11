@@ -15,14 +15,11 @@ import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
-import com.sencha.gxt.widget.core.client.event.ExpandItemEvent;
-import com.sencha.gxt.widget.core.client.event.ExpandItemEvent.ExpandItemHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.GridView;
-import com.sencha.gxt.widget.core.client.grid.GroupingView;
 import com.sencha.gxt.widget.core.client.grid.RowExpander;
 
 import us.dontcareabout.cmc.client.Resources;
@@ -32,14 +29,12 @@ import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.ImageUrl;
 import us.dontcareabout.cmc.common.shared.Museum;
 import us.dontcareabout.cmc.common.shared.MuseumUtil;
+import us.dontcareabout.cmc.common.shared.Selection;
 import us.dontcareabout.gxt.client.component.Grid2;
-import us.dontcareabout.gxt.client.model.GetValueProvider;
 
 public class ArtifactGrid extends Grid2<Artifact> {
 	private static final int firstWidth = 100;
 	private static final Properties properties = GWT.create(Properties.class);
-
-	private HashMap<Museum, Boolean> expandMap = new HashMap<>();
 
 	private RowExpander<Artifact> rowExpander = new RowExpander<Artifact>(
 		new AbstractCell<Artifact>() {
@@ -106,14 +101,6 @@ public class ArtifactGrid extends Grid2<Artifact> {
 			}
 		}
 	);
-	private ColumnConfig<Artifact, String> museumCC = new ColumnConfig<>(
-		new GetValueProvider<Artifact, String>() {
-			@Override
-			public String getValue(Artifact object) {
-				return object.getId().getMuseum().title;
-			}
-		}
-	);
 
 	public ArtifactGrid() {
 		init();
@@ -123,7 +110,25 @@ public class ArtifactGrid extends Grid2<Artifact> {
 	public void refresh(List<Artifact> data) {
 		getStore().replaceAll(data);
 		checkEmpty();
-		expandMap.clear();
+
+		HashMap<Museum, Selection> selection = new HashMap<>();
+
+		for(Artifact a : data) {
+			Museum m = a.getId().getMuseum();
+			Selection s = selection.get(m);
+
+			if (s == null) {
+				s = new Selection();
+				s.setMuseum(m);
+				selection.put(m, s);
+			}
+
+			s.getUrlId().add(a.getId().getUrlId());
+		}
+
+		for (Selection s : selection.values()) {
+			DataCenter.wantArtifactM(s);
+		}
 	}
 
 	public void injectArtifactM(List<ArtifactM> data) {
@@ -174,7 +179,7 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		ready.setFixed(true);
 
 		ArrayList<ColumnConfig<Artifact, ?>> list = new ArrayList<>();
-		list.add(museumCC);
+		list.add(rowExpander);
 		list.add(ready);
 		list.add(score);
 		list.add(urlId);
@@ -182,7 +187,6 @@ public class ArtifactGrid extends Grid2<Artifact> {
 		list.add(new ColumnConfig<>(properties.era(), 100, "年代"));
 		list.add(new ColumnConfig<>(properties.origin(), 100, "來源地"));
 		list.add(new ColumnConfig<>(properties.note(), 100, "備註"));
-		list.add(rowExpander);
 		return new ColumnModel<>(list);
 	}
 
@@ -199,25 +203,8 @@ public class ArtifactGrid extends Grid2<Artifact> {
 
 	@Override
 	protected GridView<Artifact> genGridView() {
-		GroupingView<Artifact> view = new GroupingView<>();
-		view.setShowGroupedColumn(false);
+		GridView<Artifact> view = new GridView<>();
 		view.setForceFit(true);
-		view.groupBy(museumCC);
-		view.setStartCollapsed(true);
-		view.addExpandHandler(new ExpandItemHandler<List<Artifact>>() {
-			@Override
-			public void onExpand(ExpandItemEvent<List<Artifact>> event) {
-				Museum museum = event.getItem().get(0).getId().getMuseum();
-				Boolean hasExpanded = expandMap.get(museum);
-
-				//已經要過得就不再要了
-				//理論上前面那個成立後面也一定成立，只是養成好習慣兩個都寫 XD
-				if (hasExpanded != null && hasExpanded) { return; }
-
-				expandMap.put(museum, true);
-				DataCenter.wantArtifactM(event.getItem());
-			}
-		});
 		return view;
 	}
 

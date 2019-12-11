@@ -88,14 +88,7 @@ public class DataCenter {
 	private static boolean wsReady = false;
 	private static ArrayList<Selection> selectionQueue = new ArrayList<>();
 
-	public static void wantArtifactM(List<Artifact> list) {
-		Selection selection = new Selection();
-		selection.setMuseum(list.get(0).getId().getMuseum());
-
-		for (Artifact a : list) {
-			selection.getUrlId().add(a.getId().getUrlId());
-		}
-
+	public static void wantArtifactM(Selection selection) {
 		if (wsReady) {
 			ws.request(selection);
 		} else {
