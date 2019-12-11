@@ -15,7 +15,7 @@ import com.google.gwt.storage.client.Storage;
 public class SheetId {
 	private static Mapper mapper = GWT.create(Mapper.class);
 	private static Storage storage = Storage.getLocalStorageIfSupported();
-	private static final String KEY = "SheetId";
+	private static final String KEY = "CMC-SheetId";
 
 	private String id;
 	private String name;
@@ -96,7 +96,7 @@ public class SheetId {
 			if (id.isSelect()) { return id.getId(); }
 		}
 
-		return "1rr293klEVOjHUKiKgAotCpXBWYIASsCMZEZEVfkanP4";
+		return "1BFK7PYqXOe4eH8_p9cXVN3o-t48gZsRh_CB-VAgpd7U";
 	}
 
 	public static ArrayList<SheetId> retrieve() {
