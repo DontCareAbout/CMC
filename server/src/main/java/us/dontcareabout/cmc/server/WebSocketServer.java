@@ -67,6 +67,16 @@ public class WebSocketServer extends TextWebSocketHandler implements WebSocketCo
 				System.out.println(selection.getMuseum() + " is not ready"); //TODO 改 log 機制
 			} catch (IOException e) {
 				//JSOUP 讀取檔案失敗，目前不（知道怎麼）處理
+				System.out.println(aid + " throw IOException");
+			} catch (Exception e) {
+				//理論上是 parse 過程發生意料外的狀況
+				//所以砍掉重抓一次，就不去動 purchaseSet 了
+				Service.collection.remove(aid);
+				Service.collection.purchase(aid);
+
+				//XXX 疑似 Chrome Agent 抓到一半就去讀檔案會導致抓取中斷
+				//所以才會突然炸出意料外的 exception
+				//目前無妥善解法（除非不用 Chrome Agent... Orz）
 			}
 		}
 
