@@ -9,7 +9,7 @@
 	<ui:with field="emptyVLD" type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
 		<ui:attributes width="1" height="1" />
 	</ui:with>
-	<ui:with field="linkVLD" type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
+	<ui:with field="VLD40" type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
 		<ui:attributes width="1" height="40" />
 	</ui:with>
 	
@@ -26,9 +26,11 @@
 			<cmc:SheetIdPanel layoutData="{panelHLD}" />
 		</c:HorizontalLayoutContainer>
 		
-	 	<!-- 純粹讓 LinkLayer 置底用 -->
+		<cmc:ServerPanel layoutData="{VLD40}" />
+		
+		<!-- 純粹讓 LinkLayer 置底用 -->
 		<c:HorizontalLayoutContainer layoutData="{emptyVLD}" />
 		
-		<cmc:LinkLayer layoutData="{linkVLD}" />
+		<cmc:LinkLayer layoutData="{VLD40}" />
 	</c:VerticalLayoutContainer>
 </ui:UiBinder> 
