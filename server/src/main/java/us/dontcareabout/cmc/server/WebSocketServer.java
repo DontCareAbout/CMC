@@ -20,10 +20,6 @@ import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
 import us.dontcareabout.cmc.server.museum.Service;
 import us.dontcareabout.cmc.server.museum.exception.ArtifactNotExistException;
 
-/**
- * 目前所有的 input 都是
- *
- */
 @EnableWebSocket
 public class WebSocketServer extends TextWebSocketHandler implements WebSocketConfigurer {
 	private final Gson gson = new Gson();
@@ -74,9 +70,12 @@ public class WebSocketServer extends TextWebSocketHandler implements WebSocketCo
 				Service.collection.remove(aid);
 				Service.collection.purchase(aid);
 
-				//XXX 疑似 Chrome Agent 抓到一半就去讀檔案會導致抓取中斷
-				//所以才會突然炸出意料外的 exception
-				//目前無妥善解法（除非不用 Chrome Agent... Orz）
+				System.out.println("!!!! " + aid + " !!!!");
+				e.printStackTrace();	//TODO 改 log 機制
+
+				//XXX 目前遇到 Chrome Agent 在頁面還沒 ready 就儲存檔案並結束的狀況
+				//主要是發生在 Royal Armouries 上..... ＝＝"
+				//目前還無解，只能靠 Bookmarklet 解決？
 			}
 		}
 
