@@ -2,6 +2,7 @@ package us.dontcareabout.cmc.server.museum.collection;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.ImageUrl;
@@ -12,7 +13,11 @@ public class RoyalArmouries implements Researcher {
 	public ArtifactM translate(Document doc) {
 		ArtifactM result = new ArtifactM();
 
-		result.setOrigin(doc.getElementsByClass("creation ng-binding ng-scope").get(0).text().substring(7));
+		Elements originElement = doc.getElementsByClass("creation ng-binding ng-scope");
+		//就是遇到了沒 origin 的傢伙... Orz
+		if (!originElement.isEmpty()) {
+			result.setOrigin(originElement.get(0).text().substring(7));
+		}
 
 		Element main = doc.getElementById("main");
 
