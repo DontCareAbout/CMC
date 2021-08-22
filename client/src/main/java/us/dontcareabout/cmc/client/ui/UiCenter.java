@@ -1,42 +1,17 @@
 package us.dontcareabout.cmc.client.ui;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.container.Viewport;
 import com.sencha.gxt.widget.core.client.info.Info;
 
-import us.dontcareabout.cmc.client.data.SheetId;
-import us.dontcareabout.cmc.client.ui.event.RefreshSheetIdStoreEvent;
-import us.dontcareabout.cmc.client.ui.event.RefreshSheetIdStoreEvent.RefreshSheetIdStoreHandler;
-import us.dontcareabout.cmc.client.ui.event.SheetIdSelectEvent;
-import us.dontcareabout.cmc.client.ui.event.SheetIdSelectEvent.SheetIdSelectHandler;
+import us.dontcareabout.cmc.client.data.DataCenter;
+import us.dontcareabout.gst.client.GstEventCenter;
+import us.dontcareabout.gst.client.event.ReloadSheetEvent;
+import us.dontcareabout.gst.client.event.ReloadSheetEvent.ReloadSheetHandler;
 
 public class UiCenter {
-	private final static SimpleEventBus eventBus = new SimpleEventBus();
-
-	public static void sheetIdSelect(SheetId sid) {
-		eventBus.fireEvent(new SheetIdSelectEvent(sid));
-	}
-
-	public static HandlerRegistration addSheetIdSelect(SheetIdSelectHandler handler) {
-		return eventBus.addHandler(SheetIdSelectEvent.TYPE, handler);
-	}
-
-	////////////////
-
-	public static void refreshSheetIdStore() {
-		eventBus.fireEvent(new RefreshSheetIdStoreEvent());
-	}
-
-	public static HandlerRegistration addRefreshSheetIdStore(RefreshSheetIdStoreHandler handler) {
-		return eventBus.addHandler(RefreshSheetIdStoreEvent.TYPE, handler);
-	}
-
-	////////////////
-
 	public static void wsError() {
 		Info.display("連線發生錯誤", "請檢查設定值以及 Server 狀態並重新連線");
 	}
@@ -48,6 +23,16 @@ public class UiCenter {
 
 	////////////////////////////////
 
+	static {
+		GstEventCenter.addReloadSheet(new ReloadSheetHandler() {
+			@Override
+			public void onReloadSheet(ReloadSheetEvent event) {
+				toObjectView();
+				DataCenter.wantArtifact(event.sheetId);
+			}
+		});
+	}
+
 	private final static MainView mainView = new MainView();
 
 	public static void start() {
@@ -55,7 +40,7 @@ public class UiCenter {
 	}
 
 	public static void toObjectView() {
-		mainView.toObjectView();
+		mainView.toArtifactView();
 	}
 
 	////////////////////////////////

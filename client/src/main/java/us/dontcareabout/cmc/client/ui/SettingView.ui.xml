@@ -1,10 +1,12 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
 	xmlns:c="urn:import:com.sencha.gxt.widget.core.client.container" 
-	xmlns:cmc="urn:import:us.dontcareabout.cmc.client.component">
+	xmlns:cmc="urn:import:us.dontcareabout.cmc.client.component" 
+	xmlns:gst="urn:import:us.dontcareabout.gst.client.ui" 
+	xmlns:b="urn:import:com.sencha.gxt.widget.core.client.button">
 
 	<ui:with field="sheetIdVLD" type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
-		<ui:attributes width="1" height="250" />
+		<ui:attributes width="0.8" height="500" />
 	</ui:with>
 	<ui:with field="emptyVLD" type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData">
 		<ui:attributes width="1" height="1" />
@@ -21,11 +23,7 @@
 	</ui:with>
 
 	<c:VerticalLayoutContainer>
-		<c:HorizontalLayoutContainer layoutData="{sheetIdVLD}">
-			<cmc:SheetIdGrid layoutData="{gridHLD}" />
-			<cmc:SheetIdPanel layoutData="{panelHLD}" />
-		</c:HorizontalLayoutContainer>
-		
+		<gst:SheetIdView layoutData="{sheetIdVLD}" />
 		<cmc:ServerPanel layoutData="{VLD40}" />
 		
 		<!-- 純粹讓 LinkLayer 置底用 -->
