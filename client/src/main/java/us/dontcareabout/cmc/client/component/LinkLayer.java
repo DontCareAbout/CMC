@@ -23,7 +23,6 @@ public class LinkLayer extends LayerContainer {
 	protected void adjustMember(int width, int height) {
 		github.setLX(width - githubWidth - height);
 		github.resize(height + githubWidth, height);
-		super.onResize(width, height);
 	}
 
 	private static final int githubWidth = 105;
