@@ -14,10 +14,11 @@ import us.dontcareabout.cmc.client.ui.UiCenter;
 import us.dontcareabout.cmc.common.shared.ArtifactM;
 import us.dontcareabout.cmc.common.shared.Selection;
 import us.dontcareabout.cmc.common.shared.exception.MuseumNotFoundException;
+import us.dontcareabout.gst.client.data.ApiKey;
 import us.dontcareabout.gwt.client.Console;
-import us.dontcareabout.gwt.client.google.Sheet;
-import us.dontcareabout.gwt.client.google.SheetHappen;
-import us.dontcareabout.gwt.client.google.SheetHappen.Callback;
+import us.dontcareabout.gwt.client.google.sheet.Sheet;
+import us.dontcareabout.gwt.client.google.sheet.SheetDto;
+import us.dontcareabout.gwt.client.google.sheet.SheetDto.Callback;
 import us.dontcareabout.gwt.client.websocket.event.ErrorEvent;
 
 public class DataCenter {
@@ -31,14 +32,22 @@ public class DataCenter {
 		return Collections.unmodifiableList(artifactList);
 	}
 
+	private static SheetDto<ArtifactGS> artifactSheet = new SheetDto<ArtifactGS>()
+		.key(ApiKey.priorityValue()).tabName("Object List");
+
 	public static void wantArtifact(String sheetId) {
 		artifactList = new ArrayList<>();
-		SheetHappen.get(SheetId.get(), new Callback<ArtifactGS>() {
+		artifactSheet.sheetId(sheetId).fetch(new Callback<ArtifactGS>() {
 			@Override
 			public void onSuccess(Sheet<ArtifactGS> gs) {
-				for (ArtifactGS ags : gs.getEntry()) {
+				for (ArtifactGS ags : gs.getRows()) {
 					try {
-						artifactList.add(new Artifact(ags));
+						Artifact artifact = new Artifact(ags);
+						if (artifactList.contains(artifact)) {
+							Console.log(artifact.getIndex());
+							continue;
+						}
+						artifactList.add(artifact);
 					} catch (MuseumNotFoundException e) {
 						//TODO UX 補強
 					}

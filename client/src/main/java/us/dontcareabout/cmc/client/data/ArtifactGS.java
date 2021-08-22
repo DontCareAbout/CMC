@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import com.google.common.base.Strings;
 
-import us.dontcareabout.gwt.client.google.SheetEntry;
+import us.dontcareabout.gwt.client.google.sheet.Row;
 
 /**
  * Google Sheet 提供的 artifact 資訊
  */
-public final class ArtifactGS extends SheetEntry {
+public final class ArtifactGS extends Row {
 	protected ArtifactGS() {}
 
 	public String getUrl() {
