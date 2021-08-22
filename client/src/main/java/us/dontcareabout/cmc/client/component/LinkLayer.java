@@ -20,7 +20,7 @@ public class LinkLayer extends LayerContainer {
 	}
 
 	@Override
-	protected void onResize(int width, int height) {
+	protected void adjustMember(int width, int height) {
 		github.setLX(width - githubWidth - height);
 		github.resize(height + githubWidth, height);
 		super.onResize(width, height);
